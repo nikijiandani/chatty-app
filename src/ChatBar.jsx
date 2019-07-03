@@ -15,7 +15,6 @@ class ChatBar extends Component {
 
   onMessageChange = (e) => {
     if(e.key === 'Enter') {
-      // enter
       this.props.onSendMessage(e.target.value)
       e.target.value = ""
     }
