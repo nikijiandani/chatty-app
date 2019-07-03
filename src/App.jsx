@@ -11,7 +11,21 @@ class App extends Component {
   componentDidMount(){
     // After 3 seconds, set `loading` to false in the state.
     setTimeout(() => {
-      this.setState({loading: false}); // this triggers a re-render!
+      this.setState({
+        data: {
+          currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
+          messages: [
+            {
+              username: 'Bob',
+              content: 'Has anyone seen my marbles?',
+            },
+            {
+              username: 'Anonymous',
+              content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
+            }
+          ]
+        }, 
+        loading: false}); // this triggers a re-render!
     }, 3000)
   }
   render() {
@@ -21,8 +35,8 @@ class App extends Component {
       return (
       <div>
         <NavBar />
-        <MessageList />
-        <ChatBar />
+        <MessageList messages={this.state.data.messages}/>
+        <ChatBar currentUser={this.state.data.currentUser}/>
       </div>
       )
     }
