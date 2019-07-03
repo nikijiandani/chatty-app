@@ -3,6 +3,20 @@ import NavBar from './NavBar.jsx'
 import ChatBar from './ChatBar.jsx'
 import MessageList from './MessageList.jsx'
 
+//generates random key
+const generateRandomId = (alphabet => {
+  const alphabetLength = alphabet.length;
+  const randoIter = (key, n) => {
+    if (n === 0) {
+      return key;
+    }
+    const randoIndex = Math.floor(Math.random() * alphabetLength);
+    const randoLetter = alphabet[randoIndex];
+    return randoIter(key + randoLetter, n - 1);
+  };
+  return () => randoIter("", 10);
+})("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
 class App extends Component {
   constructor() {
     super();
@@ -24,6 +38,7 @@ class App extends Component {
       }
     }
   }
+
   componentDidMount(){
     console.log('componentDidMount <App />');
     setTimeout(() => {
@@ -36,12 +51,23 @@ class App extends Component {
       this.setState({ data: { ...this.state.data, messages: messages } })
     }, 3000);
   }
+
+  onSendMessage = (messageContent) => {
+    const newMessage = {
+      id: generateRandomId(), 
+      username: this.state.data.currentUser.name, 
+      content: messageContent
+    }
+    const messages = this.state.data.messages.concat(newMessage)
+    this.setState({ data: { ...this.state.data, messages: messages }})
+  }
+
   render() {
     return (
     <div>
       <NavBar />
       <MessageList messages={this.state.data.messages}/>
-      <ChatBar currentUser={this.state.data.currentUser}/>
+      <ChatBar currentUser={this.state.data.currentUser} onSendMessage={this.onSendMessage}/>
     </div>
     )
   }
