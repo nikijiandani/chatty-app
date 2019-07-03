@@ -6,40 +6,44 @@ import MessageList from './MessageList.jsx'
 class App extends Component {
   constructor() {
     super();
-    this.state = {loading: true}
+    this.state = {
+      data: {
+        currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
+        messages: [
+          {
+            id: 1,
+            username: 'Bob',
+            content: 'Has anyone seen my marbles?',
+          },
+          {
+            id: 2,
+            username: 'Anonymous',
+            content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
+          }
+        ]
+      }
+    }
   }
   componentDidMount(){
-    // After 3 seconds, set `loading` to false in the state.
+    console.log('componentDidMount <App />');
     setTimeout(() => {
-      this.setState({
-        data: {
-          currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
-          messages: [
-            {
-              username: 'Bob',
-              content: 'Has anyone seen my marbles?',
-            },
-            {
-              username: 'Anonymous',
-              content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
-            }
-          ]
-        }, 
-        loading: false}); // this triggers a re-render!
-    }, 3000)
+      console.log('Simulating incoming message');
+      // Add a new message to the list of messages in the data store
+      const newMessage = {id: 3, username: 'Michelle', content: 'Hello there!'};
+      const messages = this.state.data.messages.concat(newMessage)
+      // Update the state of the app component.
+      // Calling setState will trigger a call to render() in App and all child components.
+      this.setState({ data: { ...this.state.data, messages: messages } })
+    }, 3000);
   }
   render() {
-    if(this.state.loading){
-      return (<h1>Fetching data from the API...</h1>)
-    } else {
-      return (
-      <div>
-        <NavBar />
-        <MessageList messages={this.state.data.messages}/>
-        <ChatBar currentUser={this.state.data.currentUser}/>
-      </div>
-      )
-    }
+    return (
+    <div>
+      <NavBar />
+      <MessageList messages={this.state.data.messages}/>
+      <ChatBar currentUser={this.state.data.currentUser}/>
+    </div>
+    )
   }
 }
 export default App;
