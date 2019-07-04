@@ -2,16 +2,11 @@ import React, {Component} from 'react';
 
 class ChatBar extends Component {
 
-  // onUsernameChange = (e) => {
-  //   if (e.input=== 13) {
-  //     // enter
-  //     this.prop.onSendMessage(this.state.username, this.state.message)
-  //   } else {
-  //     this.setState({
-  //       username: e.input.val()
-  //     })
-  //   }
-  // }
+  onUsernameChange = (e) => {
+    if (e.key === 'Enter') {
+      this.props.onUpdateUser(e.target.value)
+    }
+  }
 
   onMessageChange = (e) => {
     if(e.key === 'Enter') {

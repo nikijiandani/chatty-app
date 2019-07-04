@@ -3,38 +3,13 @@ import NavBar from './NavBar.jsx'
 import ChatBar from './ChatBar.jsx'
 import MessageList from './MessageList.jsx'
 
-//generates random key
-const generateRandomId = (alphabet => {
-  const alphabetLength = alphabet.length;
-  const randoIter = (key, n) => {
-    if (n === 0) {
-      return key;
-    }
-    const randoIndex = Math.floor(Math.random() * alphabetLength);
-    const randoLetter = alphabet[randoIndex];
-    return randoIter(key + randoLetter, n - 1);
-  };
-  return () => randoIter("", 10);
-})("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       data: {
         currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
-        messages: [
-          {
-            id: 1,
-            username: 'Bob',
-            content: 'Has anyone seen my marbles?',
-          },
-          {
-            id: 2,
-            username: 'Anonymous',
-            content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
-          }
-        ]
+        messages: []
       }
     }
   }
@@ -56,11 +31,10 @@ class App extends Component {
   }
 
   gotMsg = (msg) => {
-    // handle msg
-    console.log(msg)
-    const newMessage = {id: generateRandomId(), username: msg.username, content: msg.content}
-    const messages = this.state.data.messages.concat(newMessage)
-    this.setState({ data: { ...this.state.data, messages: messages } });
+    // handle incoming msg
+    const myIncomingMessage = JSON.parse(msg.data)
+    const messages = this.state.data.messages.concat(myIncomingMessage)
+    this.setState({ data: { ...this.state.data, messages } });
   }
 
   onSendMessage = (msg) => {
@@ -71,12 +45,20 @@ class App extends Component {
     this.socket.send(JSON.stringify(messageObj)); 
   }
 
+  onUpdateUser = (usr) => {
+    console.log(usr)
+    const tempState = {...this.state.data}
+    tempState.currentUser.name = usr
+    console.log(tempState)
+    this.setState({ tempState })
+  }
+
   render() {
     return (
     <div>
       <NavBar />
       <MessageList messages={this.state.data.messages}/>
-      <ChatBar currentUser={this.state.data.currentUser} onSendMessage={this.onSendMessage}/>
+      <ChatBar currentUser={this.state.data.currentUser} onSendMessage={this.onSendMessage} onUpdateUser={this.onUpdateUser}/>
     </div>
     )
   }
