@@ -3,9 +3,7 @@ import React, {Component} from 'react';
 class ChatBar extends Component {
 
   onUsernameChange = (e) => {
-    if (e.key === 'Enter') {
       this.props.onUpdateUser(e.target.value)
-    }
   }
 
   onMessageChange = (e) => {
@@ -21,7 +19,7 @@ class ChatBar extends Component {
       <footer className="chatbar">
         <input 
         className="chatbar-username" 
-        onKeyPress={this.onUsernameChange}
+        onBlur={this.onUsernameChange}
         defaultValue={this.props.currentUser.name} 
         placeholder="Your Name (Optional)" 
         />
