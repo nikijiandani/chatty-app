@@ -33,12 +33,14 @@ class App extends Component {
   gotMsg = (msg) => {
     // handle incoming msg
     const myIncomingMessage = JSON.parse(msg.data)
+    console.log("Incoming from WS", myIncomingMessage)
     const messages = this.state.data.messages.concat(myIncomingMessage)
     this.setState({ data: { ...this.state.data, messages } });
   }
 
   onSendMessage = (msg) => {
     const messageObj = {
+      type: "postMessage",
       username: this.state.data.currentUser.name,
       content: msg
     }
@@ -48,9 +50,15 @@ class App extends Component {
   onUpdateUser = (usr) => {
     console.log(usr)
     const tempState = {...this.state.data}
+    const postNotification = {
+      type: "postNotification",
+      content: `User ${tempState.currentUser.name} has changed their name to ${usr}`
+    }
     tempState.currentUser.name = usr
     console.log(tempState)
+    console.log(postNotification)
     this.setState({ tempState })
+    this.socket.send(JSON.stringify(postNotification))
   }
 
   render() {

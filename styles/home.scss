@@ -1,5 +1,8 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700");
 @import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css");
+
+$text-muted: rgb(66, 66, 66);
+
 h1 {
   color: tomato;
 }
@@ -88,4 +91,11 @@ body {
   line-height: 60px;
   padding: 0 10px;
   text-decoration: none;
+}
+.notification {
+  padding: 5px 15px;
+}
+.notification-content {
+  color: $text-muted;
+  font-style: italic;
 }
