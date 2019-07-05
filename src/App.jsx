@@ -8,7 +8,8 @@ class App extends Component {
     super(props);
     this.state = {
       data: {
-        currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
+        onlineUsers: 1,
+        currentUser: {name: 'Anonymous'}, // optional. if currentUser is not defined, it means the user is Anonymous
         messages: []
       }
     }
@@ -22,9 +23,15 @@ class App extends Component {
     this.socket.onmessage = this.gotMsg;
     this.socket.onclose = this.closed;
     this.socket.onopen = () => {
+      //send msg to server that user has joined
+      const userJoined = {
+        type: 'postUserJoined',
+        content: `A new user ${this.state.data.currentUser.name} has joined the chat`
+      }
+      this.socket.send(JSON.stringify(userJoined))
       this.setState({closed: false});
     };
-  }  
+  }
 
   closed = () => {
     this.setState({closed: true});
@@ -34,8 +41,31 @@ class App extends Component {
     // handle incoming msg
     const myIncomingMessage = JSON.parse(msg.data)
     console.log("Incoming from WS", myIncomingMessage)
-    const messages = this.state.data.messages.concat(myIncomingMessage)
-    this.setState({ data: { ...this.state.data, messages } });
+
+    switch(myIncomingMessage.type) {
+      case "incomingMessage":
+      case "incomingNotification":
+        //handle incoming message
+        this.setState({ 
+          data: {
+            ...this.state.data,
+            messages: [...this.state.data.messages, myIncomingMessage]
+          }
+         });
+        break;
+      case "incomingUserCount":
+        //handle incoming user count
+        this.setState({
+          data: {
+            ...this.state.data,
+            onlineUsers: myIncomingMessage.numberOfUsers,
+          }
+        });
+        break;
+      default:
+      //show an error in the console if the msg type is unknown
+      console.log("Unknown message type: ", msg.type);
+    }
   }
 
   onSendMessage = (msg) => {
@@ -64,7 +94,7 @@ class App extends Component {
   render() {
     return (
     <div>
-      <NavBar />
+      <NavBar users={this.state.data.onlineUsers}/>
       <MessageList messages={this.state.data.messages}/>
       <ChatBar currentUser={this.state.data.currentUser} onSendMessage={this.onSendMessage} onUpdateUser={this.onUpdateUser}/>
     </div>
