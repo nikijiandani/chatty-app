@@ -1,18 +1,23 @@
-React Boilerplate
+Chatty
 =====================
 
-A minimal and light dev environment for ReactJS.
+Chatty is primarily a client-side SPA built with ReactJS. It allows users to communicate with each other without having to register accounts. It communicates with a server via WebSockets for multi-user real-time updates.
+
+### Final Product
+
+#### Adding Multiple Users & changing username
+!["changing-current-username"](/public/screenshots/changing-current-username.gif)
+
+#### Disconnecting from chat
+!["disconnecting-user"](/public/screenshots/disconnecting-user.gif)
 
 ### Usage
 
-Clone the boilerplate and create your own git repo.
+Clone the git repo.
 
 ```
-git clone git@github.com:lighthouse-labs/react-simple-boilerplate.git
-cd react-simple-boilerplate
-git remote rm origin
-git remote add origin [YOUR NEW REPOSITORY]
-# Manually update your package.json file
+git clone git@github.com:nikijiandani/chatty-app.git 
+cd chatty-app
 ```
 
 Install the dependencies and start the server.
@@ -22,12 +27,23 @@ npm install
 npm start
 open http://localhost:3000
 ```
+*Note: You will also have to clone the [Chatty websocket server git repo](https://github.com/nikijiandani/chatty-server).*
 
-### Static Files
+```
+git clone git@github.com:nikijiandani/chatty-server.git
+cd chatty-server
+```
 
-You can store static files like images, fonts, etc in the `build` folder.
+Install the dependencies for chatty-server and start the server.
 
-For example, if you copy a file called my_image.png into the build folder you can access it using `http://localhost:3000/build/my_image.png`.
+```
+npm install
+npm start
+```
+
+### [Chatty Server](https://github.com/nikijiandani/chatty-server)
+
+The Chatty WebSocket server will run in parallel (on port 3001) along with the Chatty App webpack dev server that runs (on port 3000).
 
 ### Linting
 
@@ -39,6 +55,7 @@ npm run lint
 
 ### Dependencies
 
+* [Chatty_server](https://github.com/nikijiandani/chatty-server)
 * React
 * Webpack
 * [babel-loader](https://github.com/babel/babel-loader)
